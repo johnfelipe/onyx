@@ -119,14 +119,25 @@ VESPA_CONFIG_SERVER_HOST = os.environ.get("VESPA_CONFIG_SERVER_HOST") or VESPA_H
 VESPA_PORT = os.environ.get("VESPA_PORT") or "8081"
 VESPA_TENANT_PORT = os.environ.get("VESPA_TENANT_PORT") or "19071"
 
-VESPA_CLOUD_URL = os.environ.get("VESPA_CLOUD_URL", "")
+VESPA_CLOUD_URL = "https://c1035a2b.bfae05b9.z.vespa-app.cloud"
+# VESPA_CLOUD_URL ="https://cdd1b4e2.caaeaf88.z.vespa-app.cloud"
+
+
+# os.environ.get("VESPA_CLOUD_URL", "")
 
 # The default below is for dockerized deployment
 VESPA_DEPLOYMENT_ZIP = (
     os.environ.get("VESPA_DEPLOYMENT_ZIP") or "/app/danswer/vespa-app.zip"
 )
-VESPA_CLOUD_CERT_PATH = os.environ.get("VESPA_CLOUD_CERT_PATH")
-VESPA_CLOUD_KEY_PATH = os.environ.get("VESPA_CLOUD_KEY_PATH")
+VESPA_CLOUD_CERT_PATH = (
+    "/Users/danswer-trial/.vespa/testdanswer.onyx.default/data-plane-public-cert.pem"
+)
+VESPA_CLOUD_KEY_PATH = (
+    "/Users/danswer-trial/.vespa/testdanswer.onyx.default/data-plane-private-key.pem"
+)
+
+# VESPA_CLOUD_CERT_PATH = os.environ.get("VESPA_CLOUD_CERT_PATH")
+# VESPA_CLOUD_KEY_PATH = os.environ.get("VESPA_CLOUD_KEY_PATH")
 
 # Number of documents in a batch during indexing (further batching done by chunks before passing to bi-encoder)
 try:
@@ -448,7 +459,7 @@ CUSTOM_ANSWER_VALIDITY_CONDITIONS = json.loads(
     os.environ.get("CUSTOM_ANSWER_VALIDITY_CONDITIONS", "[]")
 )
 
-VESPA_REQUEST_TIMEOUT = int(os.environ.get("VESPA_REQUEST_TIMEOUT") or "15")
+VESPA_REQUEST_TIMEOUT = int(os.environ.get("VESPA_REQUEST_TIMEOUT") or "1000")
 
 SYSTEM_RECURSION_LIMIT = int(os.environ.get("SYSTEM_RECURSION_LIMIT") or "1000")
 
@@ -473,7 +484,8 @@ AZURE_DALLE_DEPLOYMENT_NAME = os.environ.get("AZURE_DALLE_DEPLOYMENT_NAME")
 
 
 # Use managed Vespa (Vespa Cloud). If set, must also set VESPA_CLOUD_URL, VESPA_CLOUD_CERT_PATH and VESPA_CLOUD_KEY_PATH
-MANAGED_VESPA = os.environ.get("MANAGED_VESPA", "").lower() == "true"
+MANAGED_VESPA = True
+# os.environ.get("MANAGED_VESPA", "").lower() == "true"
 
 ENABLE_EMAIL_INVITES = os.environ.get("ENABLE_EMAIL_INVITES", "").lower() == "true"
 
