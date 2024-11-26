@@ -275,10 +275,14 @@ def configure_default_api_keys(db_session: Session) -> None:
 async def submit_to_hubspot(
     email: str, referral_source: str | None, request: Request
 ) -> None:
-    # Get the HubSpot tracking cookie
+    if not HUBSPOT_TRACKING_URL:
+        logger.info("HUBSPOT_TRACKING_URL not set, skipping HubSpot submission")
+        return
+
+    # HubSpot tracking cookie
     hubspot_cookie = request.cookies.get("hubspotutk")
 
-    # Get the user's IP address
+    # IP address
     ip_address = request.client.host if request.client else None
 
     data = {
