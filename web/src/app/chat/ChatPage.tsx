@@ -2198,6 +2198,7 @@ export function ChatPage({
                   currentChatSession={selectedChatSession}
                   documentSidebarToggled={documentSidebarToggled}
                   llmOverrideManager={llmOverrideManager}
+                  hideUserDropdown={user?.is_anonymous_user}
                 />
               )}
 
