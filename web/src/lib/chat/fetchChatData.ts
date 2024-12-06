@@ -103,6 +103,7 @@ export async function fetchChatData(searchParams: {
   }
 
   if (user && !user.is_verified && authTypeMetadata?.requiresVerification) {
+    console.log("HISSES");
     return { redirect: "/auth/waiting-on-verification" };
   }
 
