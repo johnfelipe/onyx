@@ -37,7 +37,6 @@ basic_router = APIRouter(prefix="/settings")
 def put_settings(
     settings: Settings, _: User | None = Depends(current_admin_user)
 ) -> None:
-    print("STORING SETTINGS")
     store_settings(settings)
 
 
