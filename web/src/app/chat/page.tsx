@@ -6,8 +6,6 @@ import { ChatProvider } from "@/components/context/ChatContext";
 import { fetchChatData } from "@/lib/chat/fetchChatData";
 import WrappedChat from "./WrappedChat";
 import { cookies } from "next/headers";
-import { SettingsContext } from "@/components/settings/SettingsProvider";
-import { useContext } from "react";
 
 export default async function Page(props: {
   searchParams: Promise<{ [key: string]: string }>;

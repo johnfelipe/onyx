@@ -173,7 +173,7 @@ export function SettingsForm() {
     fieldName: keyof Settings,
     checked: boolean
   ) {
-    if (fieldName === "enable_anonymous_users" && checked) {
+    if (fieldName === "anonymous_user_enabled" && checked) {
       setShowConfirmModal(true);
     } else {
       const updates: { fieldName: keyof Settings; newValue: any }[] = [
@@ -185,7 +185,7 @@ export function SettingsForm() {
 
   function handleConfirmAnonymousUsers() {
     const updates: { fieldName: keyof Settings; newValue: any }[] = [
-      { fieldName: "enable_anonymous_users", newValue: true },
+      { fieldName: "anonymous_user_enabled", newValue: true },
     ];
     updateSettingField(updates);
     setShowConfirmModal(false);
@@ -221,9 +221,9 @@ export function SettingsForm() {
       <Checkbox
         label="Anonymous Users"
         sublabel="If set, users will not be required to sign in to use Danswer."
-        checked={settings.enable_anonymous_users}
+        checked={settings.anonymous_user_enabled}
         onChange={(e) =>
-          handleToggleSettingsField("enable_anonymous_users", e.target.checked)
+          handleToggleSettingsField("anonymous_user_enabled", e.target.checked)
         }
       />
       {showConfirmModal && (

@@ -49,7 +49,7 @@ export async function fetchSettingsSS(): Promise<CombinedSettings | null> {
           maximum_chat_retention_days: null,
           notifications: [],
           needs_reindexing: false,
-          enable_anonymous_users: false,
+          anonymous_user_enabled: false,
         };
       } else {
         throw new Error(

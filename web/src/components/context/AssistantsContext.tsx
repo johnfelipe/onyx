@@ -45,6 +45,7 @@ export const AssistantsProvider: React.FC<{
   hasAnyConnectors,
   hasImageCompatibleModel,
 }) => {
+  console.log("initialAssistants", initialAssistants);
   const [assistants, setAssistants] = useState<Persona[]>(
     initialAssistants || []
   );
