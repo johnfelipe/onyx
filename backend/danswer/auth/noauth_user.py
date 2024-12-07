@@ -37,7 +37,7 @@ def fetch_no_auth_user(
         is_active=True,
         is_superuser=False,
         is_verified=True,
-        role=UserRole.ADMIN if anonymous_user_enabled else UserRole.BASIC,
+        role=UserRole.BASIC if anonymous_user_enabled else UserRole.ADMIN,
         preferences=load_no_auth_user_preferences(store),
         is_anonymous_user=anonymous_user_enabled,
     )

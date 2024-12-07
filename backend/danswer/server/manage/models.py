@@ -62,6 +62,7 @@ class UserInfo(BaseModel):
     current_token_expiry_length: int | None = None
     is_cloud_superuser: bool = False
     organization_name: str | None = None
+    is_anonymous_user: bool | None = None
 
     @classmethod
     def from_model(
@@ -71,6 +72,7 @@ class UserInfo(BaseModel):
         expiry_length: int | None = None,
         is_cloud_superuser: bool = False,
         organization_name: str | None = None,
+        is_anonymous_user: bool | None = None,
     ) -> "UserInfo":
         return cls(
             id=str(user.id),
@@ -97,6 +99,7 @@ class UserInfo(BaseModel):
             current_token_created_at=current_token_created_at,
             current_token_expiry_length=expiry_length,
             is_cloud_superuser=is_cloud_superuser,
+            is_anonymous_user=is_anonymous_user,
         )
 
 

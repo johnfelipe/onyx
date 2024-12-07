@@ -114,6 +114,8 @@ export function UserDropdown({
   };
 
   const showAdminPanel = !user || user.role === UserRole.ADMIN;
+  console.log("showAdminPanel", showAdminPanel);
+  console.log("user", user);
   const showCuratorPanel = user && isCurator;
   const showLogout =
     user && !checkUserIsNoAuthUser(user.id) && !LOGOUT_DISABLED;

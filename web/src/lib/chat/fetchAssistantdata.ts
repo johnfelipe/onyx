@@ -28,7 +28,6 @@ export async function fetchAssistantData(): Promise<AssistantData> {
       return defaultState;
     }
 
-    console.log("returning hte basic list assistants", assistants);
     // Parallel fetch of additional data
     const [ccPairsResponse, llmProviders] = await Promise.all([
       fetchSS("/manage/connector-status").catch((error) => {
@@ -56,7 +55,6 @@ export async function fetchAssistantData(): Promise<AssistantData> {
       hasAnyConnectors,
       hasImageCompatibleModel
     );
-    console.log("filteredAssistants", filteredAssistants);
 
     return {
       assistants: filteredAssistants,

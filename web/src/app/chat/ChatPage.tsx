@@ -1652,6 +1652,7 @@ export function ChatPage({
     setShowDocSidebar: setShowHistorySidebar,
     setToggled: removeToggle,
     mobile: settings?.isMobile,
+    isAnonymousUser: user?.is_anonymous_user,
   });
 
   const autoScrollEnabled =
@@ -1901,6 +1902,7 @@ export function ChatPage({
   //   setShowDocSidebar(false);
   // };
 
+  console.log("user", user);
   const toggleDocumentSidebar = () => {
     if (!documentSidebarToggled) {
       setFiltersToggled(false);
