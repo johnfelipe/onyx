@@ -121,14 +121,14 @@ export default function FunctionalHeader({
               <FiShare2 size="18" />
             </div>
           )}
-          {!hideUserDropdown && (
-            <div className="mobile:hidden flex my-auto">
-              <UserDropdown
-                page={page}
-                toggleUserSettings={toggleUserSettings}
-              />
-            </div>
-          )}
+
+          <div className="mobile:hidden flex my-auto">
+            <UserDropdown
+              hideUserDropdown={hideUserDropdown}
+              page={page}
+              toggleUserSettings={toggleUserSettings}
+            />
+          </div>
           <Link
             className="desktop:hidden my-auto"
             href={
