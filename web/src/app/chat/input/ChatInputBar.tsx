@@ -3,8 +3,7 @@ import { FiPlusCircle, FiPlus, FiInfo, FiX, FiSearch } from "react-icons/fi";
 import { ChatInputOption } from "./ChatInputOption";
 import { Persona } from "@/app/admin/assistants/interfaces";
 import { InputPrompt } from "@/app/admin/prompt-library/interfaces";
-import { FilterManager, LlmOverrideManager } from "@/lib/hooks";
-import { SelectedFilterDisplay } from "./SelectedFilterDisplay";
+import { FilterManager } from "@/lib/hooks";
 import { useChatContext } from "@/components/context/ChatContext";
 import { getFinalLLM } from "@/lib/llm/utils";
 import { ChatFileType, FileDescriptor } from "../interfaces";
@@ -31,22 +30,13 @@ import { SettingsContext } from "@/components/settings/SettingsProvider";
 import { ChatState } from "../types";
 import UnconfiguredProviderText from "@/components/chat_search/UnconfiguredProviderText";
 import { useAssistants } from "@/components/context/AssistantsContext";
-import AnimatedToggle from "@/components/search/SearchBar";
-import { Popup } from "@/components/admin/connectors/Popup";
-import { AssistantsTab } from "../modal/configuration/AssistantsTab";
-import { IconType } from "react-icons";
-import { LlmTab } from "../modal/configuration/LlmTab";
 import { XIcon } from "lucide-react";
-import { FilterPills } from "./FilterPills";
-import { Tag } from "@/lib/types";
 import FiltersDisplay from "./FilterDisplay";
 
 const MAX_INPUT_HEIGHT = 200;
 
 interface ChatInputBarProps {
-  removeFilters: () => void;
   removeDocs: () => void;
-  openModelSettings: () => void;
   showDocs: () => void;
   showConfigureAPIKey: () => void;
   selectedDocuments: DanswerDocument[];
@@ -55,27 +45,22 @@ interface ChatInputBarProps {
   stopGenerating: () => void;
   onSubmit: () => void;
   filterManager: FilterManager;
-  llmOverrideManager: LlmOverrideManager;
   chatState: ChatState;
   alternativeAssistant: Persona | null;
   inputPrompts: InputPrompt[];
   // assistants
   selectedAssistant: Persona;
-  setSelectedAssistant: (assistant: Persona) => void;
   setAlternativeAssistant: (alternativeAssistant: Persona | null) => void;
 
   files: FileDescriptor[];
   setFiles: (files: FileDescriptor[]) => void;
   handleFileUpload: (files: File[]) => void;
   textAreaRef: React.RefObject<HTMLTextAreaElement>;
-  chatSessionId?: string;
   toggleFilters?: () => void;
 }
 
 export function ChatInputBar({
-  removeFilters,
   removeDocs,
-  openModelSettings,
   showDocs,
   showConfigureAPIKey,
   selectedDocuments,
@@ -84,12 +69,10 @@ export function ChatInputBar({
   stopGenerating,
   onSubmit,
   filterManager,
-  llmOverrideManager,
   chatState,
 
   // assistants
   selectedAssistant,
-  setSelectedAssistant,
   setAlternativeAssistant,
 
   files,
@@ -97,7 +80,6 @@ export function ChatInputBar({
   handleFileUpload,
   textAreaRef,
   alternativeAssistant,
-  chatSessionId,
   inputPrompts,
   toggleFilters,
 }: ChatInputBarProps) {

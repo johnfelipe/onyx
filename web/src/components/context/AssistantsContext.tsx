@@ -45,7 +45,6 @@ export const AssistantsProvider: React.FC<{
   hasAnyConnectors,
   hasImageCompatibleModel,
 }) => {
-  console.log("initialAssistants", initialAssistants);
   const [assistants, setAssistants] = useState<Persona[]>(
     initialAssistants || []
   );
@@ -175,15 +174,10 @@ export const AssistantsProvider: React.FC<{
     finalAssistants,
     ownedButHiddenAssistants,
   } = useMemo(() => {
-    console.log("claaassifying assistants", assistants);
-    // console.log(assistants);
-
     const { visibleAssistants, hiddenAssistants } = classifyAssistants(
       user,
       assistants
     );
-    console.log("visibleAssistants", visibleAssistants);
-    console.log("hiddenAssistants", hiddenAssistants);
 
     const finalAssistants = user
       ? orderAssistantsForUser(visibleAssistants, user)
