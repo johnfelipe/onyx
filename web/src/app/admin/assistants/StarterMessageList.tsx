@@ -27,6 +27,7 @@ export default function StarterMessagesList({
 }) {
   const { handleChange } = useFormikContext();
 
+  // Group starter messages into rows of 2 for display purposes
   const rows = values.reduce((acc: StarterMessage[][], curr, i) => {
     if (i % 2 === 0) acc.push([curr]);
     else acc[acc.length - 1].push(curr);

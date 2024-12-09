@@ -905,7 +905,11 @@ class VespaIndex(DocumentIndex):
         filters: IndexFilters,
         num_to_retrieve: int = 10,
     ) -> list[InferenceChunkUncleaned]:
-        """Retrieve random chunks matching the filters using Vespa's random ranking"""
+        """Retrieve random chunks matching the filters using Vespa's random ranking
+
+        This method is currently used for random chunk retrieval in the context of
+        assistant starter message creation (passed as sample context for usage by the assistant).
+        """
         vespa_where_clauses = build_vespa_filters(filters)
         # Remove the trailing 'and' if it exists
         if vespa_where_clauses.strip().endswith("and"):
