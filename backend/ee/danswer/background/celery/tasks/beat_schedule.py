@@ -15,7 +15,7 @@ ee_tasks_to_schedule = [
     {
         "name": "check-ttl-management",
         "task": DanswerCeleryTask.CHECK_TTL_MANAGEMENT_TASK,
-        "schedule": timedelta(seconds=5),
+        "schedule": timedelta(hours=1),
     },
 ]
 
