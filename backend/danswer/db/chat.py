@@ -147,11 +147,13 @@ def get_chat_sessions_by_user(
     user_id: UUID | None,
     deleted: bool | None,
     db_session: Session,
+    include_danswerbot_flows: bool = False,
     limit: int = 50,
 ) -> list[ChatSession]:
     stmt = select(ChatSession).where(ChatSession.user_id == user_id)
 
-    stmt = stmt.where(ChatSession.danswerbot_flow.is_(False))
+    if not include_danswerbot_flows:
+        stmt = stmt.where(ChatSession.danswerbot_flow.is_(False))
 
     stmt = stmt.order_by(desc(ChatSession.time_created))
 
