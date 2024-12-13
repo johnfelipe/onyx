@@ -51,8 +51,7 @@ export function EmailPasswordForm({
               setIsWorking(false);
               const errorDetail = (await response.json()).detail;
               let errorMsg = "Unknown error";
-              console.log("errorDetail", errorDetail);
-              if (typeof errorDetail === "object") {
+              if (typeof errorDetail === "object" && errorDetail.reason) {
                 errorMsg = errorDetail.reason;
               } else if (errorDetail === "REGISTER_USER_ALREADY_EXISTS") {
                 errorMsg =
