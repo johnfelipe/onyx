@@ -102,29 +102,23 @@ const Page = async (props: {
             </div>
             <EmailPasswordForm shouldVerify={true} nextUrl={nextUrl} />
 
-            <div className="flex flex-col gap-y-2 items-start">
-              <Text className="mt-4">
-                Don&apos;t have an account?{" "}
-                <Link
-                  href={`/auth/signup${
-                    searchParams?.next ? `?next=${searchParams.next}` : ""
-                  }`}
-                  className="text-link font-medium"
-                >
-                  Create an account
-                </Link>
-              </Text>
+            <div className="flex mt-4 justify-between">
+              <Link
+                href={`/auth/signup${
+                  searchParams?.next ? `?next=${searchParams.next}` : ""
+                }`}
+                className="text-link font-medium"
+              >
+                Create an account
+              </Link>
 
               {NEXT_PUBLIC_FORGOT_PASSWORD_ENABLED && (
-                <Text>
-                  Forgot password?{" "}
-                  <Link
-                    href="/auth/forgot-password"
-                    className="text-link font-medium"
-                  >
-                    Reset Password
-                  </Link>
-                </Text>
+                <Link
+                  href="/auth/forgot-password"
+                  className="text-link font-medium"
+                >
+                  Reset Password
+                </Link>
               )}
             </div>
           </div>
