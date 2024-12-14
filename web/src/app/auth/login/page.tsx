@@ -102,8 +102,8 @@ const Page = async (props: {
             </div>
             <EmailPasswordForm shouldVerify={true} nextUrl={nextUrl} />
 
-            <div className="flex">
-              <Text className="mt-4 mx-auto">
+            <div className="flex flex-col gap-y-2 items-start">
+              <Text className="mt-4">
                 Don&apos;t have an account?{" "}
                 <Link
                   href={`/auth/signup${
@@ -115,7 +115,7 @@ const Page = async (props: {
                 </Link>
               </Text>
               <Text>
-                Forgot password?
+                Forgot password?{" "}
                 {NEXT_PUBLIC_FORGOT_PASSWORD_ENABLED && (
                   <Link
                     href="/auth/forgot-password"

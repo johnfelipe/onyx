@@ -6,22 +6,16 @@ import CardSection from "@/components/admin/CardSection";
 import Title from "@/components/ui/title";
 import Text from "@/components/ui/text";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Form, Formik } from "formik";
+import * as Yup from "yup";
+import { TextFormField } from "@/components/admin/connectors/Field";
+import { usePopup } from "@/components/admin/connectors/Popup";
+import { Spinner } from "@/components/Spinner";
 
 const ForgotPasswordPage: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await forgotPassword(email);
-      setMessage("Password reset email sent. Please check your inbox.");
-    } catch (error) {
-      setMessage("An error occurred. Please try again.");
-    }
-  };
+  const { popup, setPopup } = usePopup();
+  const [isWorking, setIsWorking] = useState(false);
 
   return (
     <AuthFlowContainer>
@@ -30,30 +24,55 @@ const ForgotPasswordPage: React.FC = () => {
           <div className="flex">
             <Title className="mb-2 mx-auto font-bold">Forgot Password</Title>
           </div>
-          <form
-            className="w-full flex flex-col items-stretch mt-8"
-            onSubmit={handleSubmit}
+          {isWorking && <Spinner />}
+          {popup}
+          <Formik
+            initialValues={{
+              email: "",
+            }}
+            validationSchema={Yup.object().shape({
+              email: Yup.string().email().required(),
+            })}
+            onSubmit={async (values) => {
+              setIsWorking(true);
+              try {
+                await forgotPassword(values.email);
+                setPopup({
+                  type: "success",
+                  message:
+                    "Password reset email sent. Please check your inbox.",
+                });
+              } catch (error) {
+                setPopup({
+                  type: "error",
+                  message: "An error occurred. Please try again.",
+                });
+              } finally {
+                setIsWorking(false);
+              }
+            }}
           >
-            <Input
-              id="email-address"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              placeholder="Email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            {({ isSubmitting }) => (
+              <Form className="w-full flex flex-col items-stretch mt-2">
+                <TextFormField
+                  name="email"
+                  label="Email"
+                  type="email"
+                  placeholder="email@yourcompany.com"
+                />
 
-            <Button type="submit" className="w-full">
-              Reset Password
-            </Button>
-          </form>
-          {message && (
-            <Text className="mt-4 text-center text-sm text-gray-600">
-              {message}
-            </Text>
-          )}
+                <div className="flex">
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="mx-auto w-full"
+                  >
+                    Reset Password
+                  </Button>
+                </div>
+              </Form>
+            )}
+          </Formik>
           <div className="flex">
             <Text className="mt-4 mx-auto">
               <Link href="/auth/login" className="text-link font-medium">
