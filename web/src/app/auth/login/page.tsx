@@ -114,17 +114,18 @@ const Page = async (props: {
                   Create an account
                 </Link>
               </Text>
-              <Text>
-                Forgot password?{" "}
-                {NEXT_PUBLIC_FORGOT_PASSWORD_ENABLED && (
+
+              {NEXT_PUBLIC_FORGOT_PASSWORD_ENABLED && (
+                <Text>
+                  Forgot password?{" "}
                   <Link
                     href="/auth/forgot-password"
                     className="text-link font-medium"
                   >
                     Reset Password
                   </Link>
-                )}
-              </Text>
+                </Text>
+              )}
             </div>
           </div>
         )}
@@ -137,8 +138,8 @@ const Page = async (props: {
               </Title>
             </div>
             <EmailPasswordForm nextUrl={nextUrl} />
-            <div className="flex">
-              <Text className="mt-4 mx-auto">
+            <div className="flex flex-col gap-y-2 items-start">
+              <Text className="mt-4 ">
                 Don&apos;t have an account?{" "}
                 <Link
                   href={`/auth/signup${
@@ -149,6 +150,17 @@ const Page = async (props: {
                   Create an account
                 </Link>
               </Text>
+              {NEXT_PUBLIC_FORGOT_PASSWORD_ENABLED && (
+                <Text>
+                  Forgot password?{" "}
+                  <Link
+                    href="/auth/forgot-password"
+                    className="text-link font-medium"
+                  >
+                    Reset Password
+                  </Link>
+                </Text>
+              )}
             </div>
           </CardSection>
         )}
