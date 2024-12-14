@@ -12,10 +12,16 @@ import * as Yup from "yup";
 import { TextFormField } from "@/components/admin/connectors/Field";
 import { usePopup } from "@/components/admin/connectors/Popup";
 import { Spinner } from "@/components/Spinner";
+import { redirect } from "next/navigation";
+import { NEXT_PUBLIC_FORGOT_PASSWORD_ENABLED } from "@/lib/constants";
 
 const ForgotPasswordPage: React.FC = () => {
   const { popup, setPopup } = usePopup();
   const [isWorking, setIsWorking] = useState(false);
+
+  if (!NEXT_PUBLIC_FORGOT_PASSWORD_ENABLED) {
+    redirect("/auth/login");
+  }
 
   return (
     <AuthFlowContainer>

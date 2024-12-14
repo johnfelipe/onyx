@@ -1,103 +1,113 @@
 "use client";
-import React, { useState, useEffect } from "react";
-// import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState } from "react";
 import { resetPassword } from "../forgot-password/utils";
+import AuthFlowContainer from "@/components/auth/AuthFlowContainer";
+import CardSection from "@/components/admin/CardSection";
+import Title from "@/components/ui/title";
+import Text from "@/components/ui/text";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Form, Formik } from "formik";
+import * as Yup from "yup";
+import { TextFormField } from "@/components/admin/connectors/Field";
+import { usePopup } from "@/components/admin/connectors/Popup";
+import { Spinner } from "@/components/Spinner";
+import { redirect, useSearchParams } from "next/navigation";
+import { NEXT_PUBLIC_FORGOT_PASSWORD_ENABLED } from "@/lib/constants";
 
 const ResetPasswordPage: React.FC = () => {
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [token, setToken] = useState("");
-  const [message, setMessage] = useState("");
-  //   const navigate = useNavigate();
-  //   const location = useLocation();
+  const { popup, setPopup } = usePopup();
+  const [isWorking, setIsWorking] = useState(false);
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const tokenFromUrl = searchParams.get("token");
-    if (tokenFromUrl) {
-      setToken(tokenFromUrl);
-    } else {
-      setMessage("Invalid or missing reset token.");
-    }
-  }, [location]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      setMessage("Passwords do not match.");
-      return;
-    }
-    try {
-      await resetPassword(token, password);
-      setMessage(
-        "Password reset successfully. You can now log in with your new password."
-      );
-      //   setTimeout(() => navigate("/login"), 3000);
-    } catch (error) {
-      setMessage("An error occurred. Please try again.");
-    }
-  };
+  if (!NEXT_PUBLIC_FORGOT_PASSWORD_ENABLED) {
+    redirect("/auth/login");
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Reset Password
-          </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="password" className="sr-only">
-                New Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="New Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="confirm-password" className="sr-only">
-                Confirm New Password
-              </label>
-              <input
-                id="confirm-password"
-                name="confirm-password"
-                type="password"
-                autoComplete="new-password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Confirm New Password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </div>
+    <AuthFlowContainer>
+      <div className="flex flex-col w-full justify-center">
+        <CardSection className="mt-4 w-full">
+          <div className="flex">
+            <Title className="mb-2 mx-auto font-bold">Reset Password</Title>
           </div>
+          {isWorking && <Spinner />}
+          {popup}
+          <Formik
+            initialValues={{
+              password: "",
+              confirmPassword: "",
+            }}
+            validationSchema={Yup.object().shape({
+              password: Yup.string().required("Password is required"),
+              confirmPassword: Yup.string()
+                .oneOf([Yup.ref("password"), undefined], "Passwords must match")
+                .required("Confirm Password is required"),
+            })}
+            onSubmit={async (values) => {
+              if (!token) {
+                setPopup({
+                  type: "error",
+                  message: "Invalid or missing reset token.",
+                });
+                return;
+              }
+              setIsWorking(true);
+              try {
+                await resetPassword(token, values.password);
+                setPopup({
+                  type: "success",
+                  message:
+                    "Password reset successfully. You can now log in with your new password.",
+                });
+              } catch (error) {
+                setPopup({
+                  type: "error",
+                  message: "An error occurred. Please try again.",
+                });
+              } finally {
+                setIsWorking(false);
+              }
+            }}
+          >
+            {({ isSubmitting }) => (
+              <Form className="w-full flex flex-col items-stretch mt-2">
+                <TextFormField
+                  name="password"
+                  label="New Password"
+                  type="password"
+                  placeholder="Enter your new password"
+                />
+                <TextFormField
+                  name="confirmPassword"
+                  label="Confirm New Password"
+                  type="password"
+                  placeholder="Confirm your new password"
+                />
 
-          <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Reset Password
-            </button>
+                <div className="flex">
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="mx-auto w-full"
+                  >
+                    Reset Password
+                  </Button>
+                </div>
+              </Form>
+            )}
+          </Formik>
+          <div className="flex">
+            <Text className="mt-4 mx-auto">
+              <Link href="/auth/login" className="text-link font-medium">
+                Back to Login
+              </Link>
+            </Text>
           </div>
-        </form>
-        {message && (
-          <div className="mt-4 text-center text-sm text-gray-600">
-            {message}
-          </div>
-        )}
+        </CardSection>
       </div>
-    </div>
+    </AuthFlowContainer>
   );
 };
 

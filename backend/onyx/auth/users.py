@@ -189,32 +189,38 @@ def verify_email_domain(email: str) -> None:
             )
 
 
-def send_forgot_password_email(
+def send_email(
     user_email: str,
-    token: str,
+    subject: str,
+    body: str,
     mail_from: str = EMAIL_FROM,
 ) -> None:
-    print("Preparing forgot password email")
     msg = MIMEMultipart()
-    msg["Subject"] = "Onyx Forgot Password"
+    msg["Subject"] = subject
     msg["To"] = user_email
     if mail_from:
         msg["From"] = mail_from
 
-    link = f"{WEB_DOMAIN}/auth/reset-password?token={token}"
-    body = MIMEText(f"Click the following link to reset your password: {link}")
-    msg.attach(body)
+    msg.attach(MIMEText(body))
 
-    print(f"Sending forgot password email to: {user_email}")
     try:
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as s:
             s.starttls()
             s.login(SMTP_USER, SMTP_PASS)
             s.send_message(msg)
     except Exception as e:
-        print(f"Failed to send forgot password email: {e}")
         raise e
-    print("Forgot password email sent successfully")
+
+
+def send_forgot_password_email(
+    user_email: str,
+    token: str,
+    mail_from: str = EMAIL_FROM,
+) -> None:
+    subject = "Onyx Forgot Password"
+    link = f"{WEB_DOMAIN}/auth/reset-password?token={token}"
+    body = f"Click the following link to reset your password: {link}"
+    send_email(user_email, subject, body, mail_from)
 
 
 def send_user_verification_email(
@@ -222,23 +228,10 @@ def send_user_verification_email(
     token: str,
     mail_from: str = EMAIL_FROM,
 ) -> None:
-    msg = MIMEMultipart()
-    msg["Subject"] = "Onyx Email Verification"
-    msg["To"] = user_email
-    if mail_from:
-        msg["From"] = mail_from
-
+    subject = "Onyx Email Verification"
     link = f"{WEB_DOMAIN}/auth/verify-email?token={token}"
-
-    body = MIMEText(f"Click the following link to verify your email address: {link}")
-    msg.attach(body)
-
-    with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as s:
-        s.starttls()
-        # If credentials fails with gmail, check (You need an app password, not just the basic email password)
-        # https://support.google.com/accounts/answer/185833?sjid=8512343437447396151-NA
-        s.login(SMTP_USER, SMTP_PASS)
-        s.send_message(msg)
+    body = f"Click the following link to verify your email address: {link}"
+    send_email(user_email, subject, body, mail_from)
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
