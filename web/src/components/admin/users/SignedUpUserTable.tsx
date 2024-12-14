@@ -13,6 +13,9 @@ import { TableHeader } from "@/components/ui/table";
 import { UserRoleDropdown } from "./buttons/UserRoleDropdown";
 import { DeleteUserButton } from "./buttons/DeleteUserButton";
 import { DeactivaterButton } from "./buttons/DeactivaterButton";
+import { useUser } from "@/components/user/UserProvider";
+import { LeaveOrganizationButton } from "./buttons/LeaveOrganizationButton";
+import { NEXT_PUBLIC_CLOUD_ENABLED } from "@/lib/constants";
 
 interface Props {
   users: Array<User>;
@@ -29,6 +32,7 @@ const SignedUpUserTable = ({
   mutate,
 }: Props & PageSelectorProps) => {
   if (!users.length) return null;
+  const { user: currentUser } = useUser();
 
   const handlePopup = (message: string, type: "success" | "error") => {
     if (type === "success") mutate();
@@ -81,18 +85,30 @@ const SignedUpUserTable = ({
                 </TableCell>
                 <TableCell>
                   <div className="flex justify-end  gap-x-2">
-                    <DeactivaterButton
-                      user={user}
-                      deactivate={user.status === UserStatus.live}
-                      setPopup={setPopup}
-                      mutate={mutate}
-                    />
-                    {user.status == UserStatus.deactivated && (
-                      <DeleteUserButton
+                    {NEXT_PUBLIC_CLOUD_ENABLED &&
+                    user.id === currentUser?.id ? (
+                      <LeaveOrganizationButton
                         user={user}
                         setPopup={setPopup}
                         mutate={mutate}
                       />
+                    ) : (
+                      <>
+                        <DeactivaterButton
+                          user={user}
+                          deactivate={user.status === UserStatus.live}
+                          setPopup={setPopup}
+                          mutate={mutate}
+                        />
+
+                        {user.status == UserStatus.deactivated && (
+                          <DeleteUserButton
+                            user={user}
+                            setPopup={setPopup}
+                            mutate={mutate}
+                          />
+                        )}
+                      </>
                     )}
                   </div>
                 </TableCell>
