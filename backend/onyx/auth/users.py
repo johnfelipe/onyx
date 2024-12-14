@@ -305,7 +305,8 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
             )
         if not any(char in PASSWORD_SPECIAL_CHARS for char in password):
             raise exceptions.InvalidPasswordException(
-                reason="Password must contain at least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?)."
+                reason="Password must contain at least one special character from the following set: "
+                f"{PASSWORD_SPECIAL_CHARS}."
             )
 
         return
