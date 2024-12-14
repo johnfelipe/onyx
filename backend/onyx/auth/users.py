@@ -72,6 +72,7 @@ from onyx.configs.app_configs import WEB_DOMAIN
 from onyx.configs.constants import AuthType
 from onyx.configs.constants import DANSWER_API_KEY_DUMMY_EMAIL_DOMAIN
 from onyx.configs.constants import DANSWER_API_KEY_PREFIX
+from onyx.configs.constants import PASSWORD_SPECIAL_CHARS
 from onyx.configs.constants import UNNAMED_KEY_PLACEHOLDER
 from onyx.db.api_key import fetch_user_for_api_key
 from onyx.db.auth import get_access_token_db
@@ -302,7 +303,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
             raise exceptions.InvalidPasswordException(
                 reason="Password must contain at least one number."
             )
-        if not any(char in "!@#$%^&*()_+-=[]{}|;:,.<>?" for char in password):
+        if not any(char in PASSWORD_SPECIAL_CHARS for char in password):
             raise exceptions.InvalidPasswordException(
                 reason="Password must contain at least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?)."
             )
