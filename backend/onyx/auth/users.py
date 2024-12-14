@@ -189,6 +189,34 @@ def verify_email_domain(email: str) -> None:
             )
 
 
+def send_forgot_password_email(
+    user_email: str,
+    token: str,
+    mail_from: str = EMAIL_FROM,
+) -> None:
+    print("Preparing forgot password email")
+    msg = MIMEMultipart()
+    msg["Subject"] = "Onyx Forgot Password"
+    msg["To"] = user_email
+    if mail_from:
+        msg["From"] = mail_from
+
+    link = f"{WEB_DOMAIN}/auth/reset-password?token={token}"
+    body = MIMEText(f"Click the following link to reset your password: {link}")
+    msg.attach(body)
+
+    print(f"Sending forgot password email to: {user_email}")
+    try:
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as s:
+            s.starttls()
+            s.login(SMTP_USER, SMTP_PASS)
+            s.send_message(msg)
+    except Exception as e:
+        print(f"Failed to send forgot password email: {e}")
+        raise e
+    print("Forgot password email sent successfully")
+
+
 def send_user_verification_email(
     user_email: str,
     token: str,
@@ -429,6 +457,7 @@ class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
         self, user: User, token: str, request: Optional[Request] = None
     ) -> None:
         logger.notice(f"User {user.id} has forgot their password. Reset token: {token}")
+        send_forgot_password_email(user.email, token)
 
     async def on_after_request_verify(
         self, user: User, token: str, request: Optional[Request] = None

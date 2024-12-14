@@ -114,14 +114,17 @@ const Page = async (props: {
                   Create an account
                 </Link>
               </Text>
-              {NEXT_PUBLIC_FORGOT_PASSWORD_ENABLED && (
-                <Link
-                  href="/auth/forgot-password"
-                  className="text-link font-medium"
-                >
-                  Forgot Password?
-                </Link>
-              )}
+              <Text>
+                Forgot password?
+                {NEXT_PUBLIC_FORGOT_PASSWORD_ENABLED && (
+                  <Link
+                    href="/auth/forgot-password"
+                    className="text-link font-medium"
+                  >
+                    Reset Password
+                  </Link>
+                )}
+              </Text>
             </div>
           </div>
         )}
