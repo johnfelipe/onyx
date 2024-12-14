@@ -1,10 +1,7 @@
-import smtplib
 import uuid
 from collections.abc import AsyncGenerator
 from datetime import datetime
 from datetime import timezone
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from typing import Dict
 from typing import List
 from typing import Optional
@@ -52,19 +49,16 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from onyx.auth.api_key import get_hashed_api_key_from_request
+from onyx.auth.email_utils import send_forgot_password_email
+from onyx.auth.email_utils import send_user_verification_email
 from onyx.auth.invited_users import get_invited_users
 from onyx.auth.schemas import UserCreate
 from onyx.auth.schemas import UserRole
 from onyx.auth.schemas import UserUpdate
 from onyx.configs.app_configs import AUTH_TYPE
 from onyx.configs.app_configs import DISABLE_AUTH
-from onyx.configs.app_configs import EMAIL_FROM
 from onyx.configs.app_configs import REQUIRE_EMAIL_VERIFICATION
 from onyx.configs.app_configs import SESSION_EXPIRE_TIME_SECONDS
-from onyx.configs.app_configs import SMTP_PASS
-from onyx.configs.app_configs import SMTP_PORT
-from onyx.configs.app_configs import SMTP_SERVER
-from onyx.configs.app_configs import SMTP_USER
 from onyx.configs.app_configs import TRACK_EXTERNAL_IDP_EXPIRY
 from onyx.configs.app_configs import USER_AUTH_SECRET
 from onyx.configs.app_configs import VALID_EMAIL_DOMAINS
@@ -187,51 +181,6 @@ def verify_email_domain(email: str) -> None:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Email domain is not valid",
             )
-
-
-def send_email(
-    user_email: str,
-    subject: str,
-    body: str,
-    mail_from: str = EMAIL_FROM,
-) -> None:
-    msg = MIMEMultipart()
-    msg["Subject"] = subject
-    msg["To"] = user_email
-    if mail_from:
-        msg["From"] = mail_from
-
-    msg.attach(MIMEText(body))
-
-    try:
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as s:
-            s.starttls()
-            s.login(SMTP_USER, SMTP_PASS)
-            s.send_message(msg)
-    except Exception as e:
-        raise e
-
-
-def send_forgot_password_email(
-    user_email: str,
-    token: str,
-    mail_from: str = EMAIL_FROM,
-) -> None:
-    subject = "Onyx Forgot Password"
-    link = f"{WEB_DOMAIN}/auth/reset-password?token={token}"
-    body = f"Click the following link to reset your password: {link}"
-    send_email(user_email, subject, body, mail_from)
-
-
-def send_user_verification_email(
-    user_email: str,
-    token: str,
-    mail_from: str = EMAIL_FROM,
-) -> None:
-    subject = "Onyx Email Verification"
-    link = f"{WEB_DOMAIN}/auth/verify-email?token={token}"
-    body = f"Click the following link to verify your email address: {link}"
-    send_email(user_email, subject, body, mail_from)
 
 
 class UserManager(UUIDIDMixin, BaseUserManager[User, uuid.UUID]):
