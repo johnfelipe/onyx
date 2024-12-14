@@ -349,7 +349,6 @@ def deactivate_user(
 def delete_user_from_db(
     user_to_delete: User,
     db_session: Session,
-    user_email: UserByEmail,
 ) -> None:
     for oauth_account in user_to_delete.oauth_accounts:
         db_session.delete(oauth_account)
@@ -379,7 +378,11 @@ def delete_user_from_db(
     # NOTE: edge case may exist with race conditions
     # with this `invited user` scheme generally.
     user_emails = get_invited_users()
-    remaining_users = [user for user in user_emails if user != user_email.user_email]
+    remaining_users = [
+        remaining_user_email
+        for remaining_user_email in user_emails
+        if remaining_user_email != user_to_delete.email
+    ]
     write_invited_users(remaining_users)
 
     logger.info(f"Deleted user {user_to_delete.email}")
@@ -409,7 +412,7 @@ async def delete_user(
     db_session.expunge(user_to_delete)
 
     try:
-        delete_user_from_db(user_to_delete, db_session, user_email)
+        delete_user_from_db(user_to_delete, db_session)
         logger.info(f"Deleted user {user_to_delete.email}")
 
     except Exception as e:

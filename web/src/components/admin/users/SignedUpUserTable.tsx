@@ -31,8 +31,9 @@ const SignedUpUserTable = ({
   onPageChange,
   mutate,
 }: Props & PageSelectorProps) => {
-  if (!users.length) return null;
   const { user: currentUser } = useUser();
+
+  if (!users.length) return null;
 
   const handlePopup = (message: string, type: "success" | "error") => {
     if (type === "success") mutate();
