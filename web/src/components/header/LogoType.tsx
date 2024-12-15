@@ -14,7 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { pageType } from "@/app/chat/sessionSidebar/types";
-import { Logo } from "../Logo";
+import { Logo } from "../logo/Logo";
 import { HeaderTitle } from "./HeaderTitle";
 import Link from "next/link";
 

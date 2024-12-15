@@ -14,7 +14,6 @@ import { buildClientUrl } from "@/lib/utilsSS";
 import { Inter } from "next/font/google";
 import { EnterpriseSettings, GatingType } from "./admin/settings/interfaces";
 import { HeaderTitle } from "@/components/header/HeaderTitle";
-import { Logo } from "@/components/Logo";
 import { fetchAssistantData } from "@/lib/chat/fetchAssistantdata";
 import { AppProvider } from "@/components/context/AppProvider";
 import { PHProvider } from "./providers";
@@ -23,6 +22,7 @@ import CardSection from "@/components/admin/CardSection";
 import { Suspense } from "react";
 import PostHogPageView from "./PostHogPageView";
 import Script from "next/script";
+import LogoType from "@/components/logo/Logo";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -115,8 +115,7 @@ export default async function RootLayout({
     return getPageContent(
       <div className="flex flex-col items-center justify-center min-h-screen">
         <div className="mb-2 flex items-center max-w-[175px]">
-          <HeaderTitle>Onyx</HeaderTitle>
-          <Logo height={40} width={40} />
+          <LogoType />
         </div>
 
         <CardSection className="max-w-md">
@@ -160,8 +159,7 @@ export default async function RootLayout({
     return getPageContent(
       <div className="flex flex-col items-center justify-center min-h-screen">
         <div className="mb-2 flex items-center max-w-[175px]">
-          <HeaderTitle>Onyx</HeaderTitle>
-          <Logo height={40} width={40} />
+          <LogoType />
         </div>
         <CardSection className="w-full max-w-md">
           <h1 className="text-2xl font-bold mb-4 text-error">
